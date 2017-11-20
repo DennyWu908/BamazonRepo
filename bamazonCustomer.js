@@ -16,5 +16,19 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
 
 	if (err) throw err;
+
+	displayStock();
 	
 });
+
+function displayStock() {
+	
+	connection.query("SELECT * FROM products", function(err, results) {
+
+		if (err) throw err;
+
+		console.log(res);
+    	connection.end();
+
+	})
+}
