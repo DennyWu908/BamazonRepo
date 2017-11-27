@@ -18,6 +18,7 @@ connection.connect(function(err) {
 	if (err) throw err;
 
 	displayStock();
+	purchase();
 	
 });
 
@@ -27,8 +28,38 @@ function displayStock() {
 
 		if (err) throw err;
 
-		console.log(res);
-    	connection.end();
+		for (var i = 0; i < results.length; i++) {
+      		console.log(results[i].item_id + " | " + results[i].product_name + " | " + results[i].department_name + " | " + results[i].price + " | " + results[i].stock_quantity);
+      	}
 
 	})
+}
+
+function purchase() {
+	
+	inquirer
+		.prompt([
+			{
+				name: "product_id",
+		        type: "input",
+		        message: "What is the ID of the product you want to buy?"
+			},
+			{
+				name: "product_amount",
+		        type: "input",
+		        message: "How many units of this product do you want?"
+			}
+		])
+		.then(function(answer) {
+
+			connection.query(
+				UPDATE products SET ? WHERE ?,
+				[
+					{
+						stock_quantity: stock_quantity - answer.product_amount
+					}
+				]
+			)
+
+		})
 }
