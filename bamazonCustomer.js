@@ -53,10 +53,14 @@ function purchase() {
 		.then(function(answer) {
 
 			connection.query(
-				UPDATE products SET ? WHERE ?,
+				"SELECT * FROM products WHERE item_id", [answer.product_id],
+			)
+
+			connection.query(
+				"UPDATE products SET ? WHERE ?",
 				[
 					{
-						stock_quantity: stock_quantity - answer.product_amount
+						// stock_quantity: stock_quantity - answer.product_amount
 					}
 				]
 			)
