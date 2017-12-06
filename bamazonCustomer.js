@@ -1,6 +1,8 @@
+// Dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
+// This variable contains the connection information for the sql database. When I installed sql, I created a password.
 var connection = mysql.createConnection({
 
 	host: "localhost",
@@ -13,14 +15,17 @@ var connection = mysql.createConnection({
 
 });
 
+// This function will create a connection to the sql database and mysql server.
 connection.connect(function(err) {
 
 	if (err) throw err;
 
+	// When the connection is ready, the terminal will display the list of items on sale.
 	displayStock();
 	
 });
 
+// As noted above, this function iterates through the sql database and returns the list of items on sale.
 function displayStock() {
 	
 	connection.query("SELECT * FROM products", function(err, results) {
@@ -33,10 +38,12 @@ function displayStock() {
 
 	})
 
+	// After the list as been displayed, the user will be prompted to buy items.
 	purchase();
 	
 }
 
+// This function will allow the user to buy items with an inquirer dialogue.
 function purchase() {
 
 	connection.query("SELECT * FROM products", function(err, results) {
@@ -56,6 +63,7 @@ function purchase() {
 			        message: "How many units of this product do you want?"
 				}
 			])
+			// Iterating through the database to find an item with an ID matching the one entered.
 			.then(function(answer) {
 
 				var selectedItem;
@@ -67,11 +75,13 @@ function purchase() {
 			        }
 				}
 
+				// If the user asks for too many of a certain item, or it is no longer in stock, the program will return an error message. Then it will list the items for sale and repeat the inquirer prompt.
 				if (selectedItem.stock_quantity < selectedAmount || selectedItem.stock_quantity === 0) {
 
 					console.log("Sorry, we do not have enough of that item.")
 					displayStock();
 
+				// If the items asked for are in stock, the amounts purchased by the user will be subtracted from the total number, and the database will be updated accordingly. Afterwards, the inquirer prompt will be displayed again.
 				} else {
 
 					var purchaseID = selectedItem.item_id
