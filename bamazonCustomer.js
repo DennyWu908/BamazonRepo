@@ -70,12 +70,14 @@ function purchase() {
 				var selectedAmount = parseInt(answer.product_amount);
 
 				for (var i = 0; i < results.length; i++) {
-					if (results[i].item_id === answer.product_id) {
+					if (results[i].item_id === parseInt(answer.product_id)) {
 			    		selectedItem = results[i];
 			        }
 				}
 
-				console.log(selectedItem)
+				// console.log(results)
+				// console.log(typeof(answer.product_id))
+				// console.log(selectedItem)
 
 				// If the user asks for too many of a certain item, or it is no longer in stock, the program will return an error message. Then it will list the items for sale and repeat the inquirer prompt.
 				if (selectedItem.stock_quantity < selectedAmount || selectedItem.stock_quantity === 0) {
@@ -90,7 +92,7 @@ function purchase() {
 					var newAmount = selectedItem.stock_quantity - selectedAmount
 
 					connection.query(
-			            "UPDATE purchase SET ? WHERE ?",
+			            "UPDATE products SET ? WHERE ?",
 			            [
 			              {
 			                stock_quantity: newAmount
@@ -99,8 +101,8 @@ function purchase() {
 			                item_id: purchaseID
 			              }
 			            ],
-			            function(error) {
-			              if (error) throw err;
+			            function(err, results) {
+			              if (err) throw err;
 
 			              console.log("Thank you for your purchase!");
 			              displayStock();
