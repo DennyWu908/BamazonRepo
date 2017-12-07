@@ -75,6 +75,8 @@ function purchase() {
 			        }
 				}
 
+				console.log(selectedItem)
+
 				// If the user asks for too many of a certain item, or it is no longer in stock, the program will return an error message. Then it will list the items for sale and repeat the inquirer prompt.
 				if (selectedItem.stock_quantity < selectedAmount || selectedItem.stock_quantity === 0) {
 
